@@ -126,6 +126,46 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
                     gfx.present(&window)?;
                 }
             }
+
+            //does proper calculations for a "kick" input.
+            if input.key_down(Key::W) && hero.moves_unlocked >= 2 && screen_tracker < 90 { 
+                let kick_damage: f32 = 20.0;
+                let random = rand::thread_rng().gen_range(0..9);
+                turn += 0.5;
+
+                //calls on function to calculate an enemies move.
+                let enemy_damage = enemy_move(&enemy);
+                
+                if enemy_damage == -1.0 {
+                    //do nothing, attack was blocked.
+                } else {
+                    if random <= 4 { //50% chance to hit.
+                        enemy.current_health = enemy.current_health - kick_damage;
+                    } else {
+                        //do nothing
+                    }
+                    hero.current_health = hero.current_health - enemy_damage;
+                }
+
+                //updates the health bar visuals.
+                health_bars_update(&mut gfx, &hero, &enemy);
+                gfx.present(&window)?;
+
+                //checks for win or loss.
+                if enemy.current_health <= 0.0 { //win condition.
+                    screen_tracker = 99;
+
+                    gfx.clear(Color::BLACK);
+                    text_box(&mut gfx, 1, &main_font, turn);
+                    gfx.present(&window)?;
+                } else if hero.current_health <= 0.0 { //loss condition.
+                    screen_tracker = 99;
+                    
+                    gfx.clear(Color::BLACK);
+                    text_box(&mut gfx, 2, &main_font, turn);
+                    gfx.present(&window)?;
+                }
+            }
         }
     }
 
