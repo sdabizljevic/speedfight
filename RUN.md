@@ -2,6 +2,8 @@ Make sure you do the following steps in VScode, but NOT on a virtual machine, th
 
 Use the command: git clone https://github.com/sdabizljevic/speedfight.git
 
+Make sure you're in the speedfight folder by using the command: cd speedfight
+
 Use the command: cargo run 
 
 The game should open from there!
