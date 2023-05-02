@@ -49,8 +49,8 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
         moves_unlocked: 2,
     };
     let mut enemy = Entity {
-        max_health: 100.0,
-        current_health: 100.0,
+        max_health: 250.0,
+        current_health: 250.0,
         moves_unlocked: 2,
     };
 
@@ -94,7 +94,7 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
             //does the proper calculations and display in response to using a "punch". Also checks for a win after the punch lands.
             if input.key_down(Key::Q) && hero.moves_unlocked >= 1 && screen_tracker < 90 { 
                 //punches do 18 damage, also immediately increment the turn counter.
-                let punch_damage: f32 = 9.0;
+                let punch_damage: f32 = 15.0;
                 turn += 0.5;
 
                 //calls on my function to calculate an enemies move.
@@ -116,20 +116,20 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
                     screen_tracker = 99;
 
                     gfx.clear(Color::BLACK);
-                    text_box(&mut gfx, 1, &main_font, turn);
+                    transition(&mut gfx, 1, &main_font, turn);
                     gfx.present(&window)?;
                 } else if hero.current_health <= 0.0 { //loss condition.
                     screen_tracker = 99;
                     
                     gfx.clear(Color::BLACK);
-                    text_box(&mut gfx, 2, &main_font, turn);
+                    transition(&mut gfx, 2, &main_font, turn);
                     gfx.present(&window)?;
                 }
             }
 
             //does proper calculations for a "kick" input.
             if input.key_down(Key::W) && hero.moves_unlocked >= 2 && screen_tracker < 90 { 
-                let kick_damage: f32 = 20.0;
+                let kick_damage: f32 = 30.0;
                 let random = rand::thread_rng().gen_range(0..9);
                 turn += 0.5;
 
@@ -156,13 +156,13 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
                     screen_tracker = 99;
 
                     gfx.clear(Color::BLACK);
-                    text_box(&mut gfx, 1, &main_font, turn);
+                    transition(&mut gfx, 1, &main_font, turn);
                     gfx.present(&window)?;
                 } else if hero.current_health <= 0.0 { //loss condition.
                     screen_tracker = 99;
                     
                     gfx.clear(Color::BLACK);
-                    text_box(&mut gfx, 2, &main_font, turn);
+                    transition(&mut gfx, 2, &main_font, turn);
                     gfx.present(&window)?;
                 }
             }
@@ -275,8 +275,8 @@ fn enemy_move(enemy: &Entity) -> f32 {
     } else { return 0.0; }
 }
 
-//function to put up the text box, which clears after the player interacts.
-fn text_box(mut gfx: &mut Graphics, display: u8, font: &VectorFont, turn: f32) -> Result<()> {
+//function to put up the text box.
+fn transition(mut gfx: &mut Graphics, display: u8, font: &VectorFont, turn: f32) -> Result<()> {
     let black_box = Rectangle::new(Vector::new(150.0, 500.0), Vector::new(700.0, 200.0));
     gfx.fill_rect(&black_box, Color::BLACK);
     gfx.stroke_rect(&black_box, Color::WHITE);
